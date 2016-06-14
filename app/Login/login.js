@@ -10,29 +10,29 @@ angular.module('myApp.login', ['ngRoute'])
 }])
 
 .controller('LoginCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray){
-		if (firebase.auth().currentUser){
-			$scope.showLoginFields = false;
-		} else {
-			$scope.showLoginFields = true;
-		}
 
-
-	var alterNavbar = function(){
-		$scope.showLoginFields = !$scope.showLoginFields;
-	}
-	
-
+		// if (firebase.auth().currentUser){
+		// 	$scope.showLoginFields = false;
+		// } else {
+		// 	$scope.showLoginFields = true;
+		// }
 
 	$scope.login = function(){
 		var email = $scope.user.email,
 				password = $scope.user.password;
-		firebase.auth().signInWithEmailAndPassword(email, password).then(alterNavbar).catch(function(err){
+		firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
+			$scope.showLoginFields = false;
+			console.log($scope.showLoginFields)
+		}).catch(function(err){
 			console.log(err);
 		});
 	};
 
 	$scope.logout = function(){
 		console.log('logging out')
-		firebase.auth().signOut().then(alterNavbar);
+		firebase.auth().signOut().then(function(){
+			console.log("logged out")
+			$scope.showLoginFields = true;
+		});
 	};
 }]);
