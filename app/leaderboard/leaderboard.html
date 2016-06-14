@@ -1,1 +1,27 @@
-<p>This is the partial for leaderboard.</p>
+<div class="row" ng-controller='LeaderboardCtrl'>
+	<div class="col-md-12">
+		<table class="table table-bordered table-striped">
+ 			<thead>
+ 				<tr>
+ 					<th>#</th>
+ 					<th>Name</th>
+ 					<th>Hole</th>
+ 					<th>H/C</th>
+ 					<th>Scratch</th>
+ 					<th>Points</th>
+ 				</tr>
+ 			</thead>
+ 			<tbody>
+ 				<tr ng-repeat='player in players'>
+ 					<td>pos</td>
+ 					<td>{{player.name}}</td>
+ 					<td>{{player.hole}}</td>
+ 					<td>{{player.handicap}}</td>
+ 					<td>{{player.scratch}}</td>
+ 					<td>{{player.points}}</td>
+ 				</tr>
+ 			</tbody>
+		</table>
+	</div>
+</div>
+
