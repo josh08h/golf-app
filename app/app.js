@@ -6,6 +6,7 @@ angular.module('myApp', [
   'myApp.leaderboard',
   'myApp.login',
   'myApp.inputScores',
+  'myApp.registration',
   'firebase'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

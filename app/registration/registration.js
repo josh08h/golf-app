@@ -2,7 +2,7 @@
 
 angular.module('myApp.registration', ['ngRoute'])
 	
-	.config(['routeProvider', function($routeProvider){
+	.config(['$routeProvider', function($routeProvider){
 		$routeProvider.when('/registration', {
 			templateUrl: 'registration/registration.html',
 			controller: 'RegistrationCtrl'
@@ -18,7 +18,7 @@ angular.module('myApp.registration', ['ngRoute'])
 				name: $scope.player.name,
 				handicap: $scope.player.handicap
 			}).then(function(ref){
-				consol.log(ref);
+				console.log(ref);
 				$scope.player.name = '';
 				$scope.player.handicap = '';
 			})
