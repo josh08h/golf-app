@@ -14,15 +14,13 @@ angular.module('myApp.registration', ['ngRoute'])
 		$scope.players = $firebaseArray(ref);
 
 		$scope.addPlayer = function(){
+			console.log("adding player");
 			$scope.players.$add({
 				name: $scope.player.name,
 				handicap: $scope.player.handicap
 			}).then(function(ref){
-				console.log(ref);
 				$scope.player.name = '';
 				$scope.player.handicap = '';
 			})
 		}
-
-
 	}])
