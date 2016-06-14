@@ -9,21 +9,21 @@ angular.module('myApp.leaderboard', ['ngRoute'])
   });
 }])
 
-.controller('LeaderboardCtrl', ['$scope', function($scope) {
+.controller('LeaderboardCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray) {
 	$scope.players = [
 		{
 			name: 'Josh',
 			hole: 18,
 			handicap: 16,
 			scratch: 72,
-			points: 23
+			points: 34
 		},
 		{
 			name: 'Ed',
 			hole: 18,
 			handicap: 16,
 			scratch: 72,
-			points: 23
+			points: 26
 		},
 		{
 			name: 'Tom',
@@ -37,7 +37,14 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 			hole: 18,
 			handicap: 16,
 			scratch: 72,
-			points: 23
+			points: 13
 		}
-	]
+	];
+
+	var ref = firebase.database().ref();
+
+	$scope.players = $firebaseArray(ref);
+
+
+
 }]);

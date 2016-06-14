@@ -15,18 +15,6 @@
   <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
   
-<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAD5OqcuGExhWi_oASzr42rq5IVvR7jdCY",
-    authDomain: "golfapp-44b1f.firebaseapp.com",
-    databaseURL: "https://golfapp-44b1f.firebaseio.com",
-    storageBucket: "golfapp-44b1f.appspot.com",
-  };
-  firebase.initializeApp(config);
-</script>
-    
 </head>
 <body>
 
@@ -73,10 +61,16 @@
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
+
+
+
+
   <script src="bower_components/angular/angular.js"></script> 
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/firebase/firebase.js"></script>
+  <script src="bower_components/angularfire/dist/angularfire.js"></script>
   <script src="app.js"></script>
   <script src="Leaderboard/leaderboard.js"></script>
   <script src="Login/login.js"></script>
@@ -84,5 +78,17 @@
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAD5OqcuGExhWi_oASzr42rq5IVvR7jdCY",
+    authDomain: "golfapp-44b1f.firebaseapp.com",
+    databaseURL: "https://golfapp-44b1f.firebaseio.com",
+    storageBucket: "golfapp-44b1f.appspot.com",
+  };
+  firebase.initializeApp(config);
+</script>
+    
 </body>
 </html>

@@ -5,7 +5,8 @@ angular.module('myApp', [
   'ngRoute',
   'myApp.leaderboard',
   'myApp.login',
-  'myApp.inputScores'
+  'myApp.inputScores',
+  'firebase'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');
