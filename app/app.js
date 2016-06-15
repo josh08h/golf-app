@@ -7,7 +7,8 @@ angular.module('myApp', [
   'myApp.login',
   'myApp.inputScores',
   'myApp.registration',
-  'firebase'
+  'firebase',
+  'LocalStorageModule'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');

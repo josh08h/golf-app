@@ -41,7 +41,7 @@
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
             </div>
-          <div ng-hide='loggedIn' class="captain-nav">
+          <div ng-show='loggedIn' class="captain-nav">
             <ul class="nav navbar-nav">
               <li class="active"><a href="#!/input">My Group</a></li>
               <li class="active"><a href="#!/registration">Add Players</a></li>
@@ -81,6 +81,7 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/firebase/firebase.js"></script>
   <script src="bower_components/angularfire/dist/angularfire.js"></script>
+  <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
   <script src="app.js"></script>
   <script src="Leaderboard/leaderboard.js"></script>
   <script src="Login/login.js"></script>

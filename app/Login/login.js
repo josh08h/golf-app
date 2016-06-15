@@ -9,35 +9,34 @@ angular.module('myApp.login', ['ngRoute'])
   });
 }])
 
-.controller('LoginCtrl', ['$scope', '$rootScope', '$firebaseArray', function($scope, $rootScope, $firebaseArray){
-	if (!$rootScope.loggedIn){
-		$rootScope.loggedIn = false;
-	};
-
-		// if (firebase.auth().currentUser){
-		// 	$scope.showLoginFields = false;
-		// } else {
-		// 	$scope.showLoginFields = true;
-		// }
+.controller('LoginCtrl', ['$scope', 'localStorageService', function($scope, localStorageService){
+	var key = 'loggedIn'
+	var val = false;
+	// if (firebase.auth().currentUser){
+	// 	$scope.showLoginFields = false;
+	// } else {
+	// 	$scope.showLoginFields = true;
+	// }
+	$scope.loggedIn = localStorageService.get('loggedIn')
 
 	$scope.login = function(){
 		var email = $scope.user.email,
 				password = $scope.user.password;
 		firebase.auth().signInWithEmailAndPassword(email, password).then(function(ref){
-		console.log(ref);
-		//newcode
-		$rootScope.loggedIn = true;
-
+			//Successful login.
+			console.log("logged in successfully");
+			val = true;
+			localStorageService.set(key, val);
 		}).catch(function(err){
-			console.log(err);
+			console.log(err.code);
 		});
 	};
 
 	$scope.logout = function(){
-		console.log('logging out')
 		firebase.auth().signOut().then(function(){
-			console.log("logged out")
-			$scope.showLoginFields = true;
+			val = false;
+			localStorageService.set(key, val);
+			console.log("logged out successfully");
 		});
 	};
 }]);
