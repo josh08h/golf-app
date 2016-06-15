@@ -17,16 +17,19 @@ angular.module('myApp.login', ['ngRoute'])
 	// } else {
 	// 	$scope.showLoginFields = true;
 	// }
-	$scope.loggedIn = localStorageService.get('loggedIn')
+	$scope.loggedIn = localStorageService.get('loggedIn');
 
 	$scope.login = function(){
 		var email = $scope.user.email,
 				password = $scope.user.password;
+
+				
 		firebase.auth().signInWithEmailAndPassword(email, password).then(function(ref){
 			//Successful login.
 			console.log("logged in successfully");
 			val = true;
 			localStorageService.set(key, val);
+			$scope.loggedIn = true;
 		}).catch(function(err){
 			console.log(err.code);
 		});
@@ -36,6 +39,7 @@ angular.module('myApp.login', ['ngRoute'])
 		firebase.auth().signOut().then(function(){
 			val = false;
 			localStorageService.set(key, val);
+			$scope.loggedIn = false;
 			console.log("logged out successfully");
 		});
 	};

@@ -15,10 +15,15 @@ angular.module('myApp.registration', ['ngRoute'])
 
 		$scope.addPlayer = function(){
 			console.log("adding player");
-			$scope.players.$add({
-				name: $scope.player.name,
-				handicap: $scope.player.handicap
-			}).then(function(ref){
+			$scope.players.$add(
+			{
+				player:	
+							{
+								name: $scope.player.name,
+								handicap: $scope.player.handicap
+							}
+			}
+			).then(function(ref){
 				$scope.player.name = '';
 				$scope.player.handicap = '';
 			})
