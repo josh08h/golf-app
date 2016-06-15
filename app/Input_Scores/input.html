@@ -1,1 +1,24 @@
-<div>Hello</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Hole</th>
+						<th>Par</th>
+						<th>S.I</th>
+						<th ng-repeat='player in myPlayers'>{{player.name}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat='hole in courseHoles | orderBy: "-holeNumber"'>
+						<td>{{hole.number}}</td>
+						<td>{{hole.par}}</td>
+						<td>{{hole.strokeIndex}}</td>
+						<!-- Input boxes here and scores displayed for prior holes -->
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
