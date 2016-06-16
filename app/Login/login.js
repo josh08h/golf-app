@@ -11,19 +11,23 @@ angular.module('myApp.login', ['ngRoute'])
 
 .controller('LoginCtrl', ['$scope', function($scope){
 
-
 	//set observer on Auth object.
 	//use $digest to refresh watchers in angular.
 	firebase.auth().onAuthStateChanged(function(user) {
 	  if (user) {
 	    $scope.loggedIn = true;
-	    $scope.$digest();
+	    $scope.$digest();	
+	    //already stored in local storage but hard to get with key
+	    //so store using localStorage.
+	    var uid = user.uid;
+			localStorage.setItem('uid', uid);
 	  } else {
 	    $scope.loggedIn = false;
+	    $scope.loggedInUser = null;
 	    $scope.$digest();
+	    localStorage.removeItem('uid');
 	  }
 	});
-
 	//Login function
 	$scope.login = function(){
 		var email = $scope.user.email,
@@ -33,11 +37,9 @@ angular.module('myApp.login', ['ngRoute'])
 				console.log(err.code);
 			});
 	};
-
 	//Logout function
 	$scope.logout = function(){
 		firebase.auth().signOut()
 	};
-
 
 }]);

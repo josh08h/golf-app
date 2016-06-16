@@ -9,42 +9,15 @@ angular.module('myApp.leaderboard', ['ngRoute'])
   });
 }])
 
-.controller('LeaderboardCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray) {
-	$scope.players = [
-		{
-			name: 'Josh',
-			hole: 18,
-			handicap: 16,
-			scratch: 72,
-			points: 34
-		},
-		{
-			name: 'Ed',
-			hole: 18,
-			handicap: 16,
-			scratch: 72,
-			points: 26
-		},
-		{
-			name: 'Tom',
-			hole: 18,
-			handicap: 16,
-			scratch: 72,
-			points: 23
-		},
-		{
-			name: 'Adriaan',
-			hole: 18,
-			handicap: 16,
-			scratch: 72,
-			points: 13
-		}
-	];
+.controller('LeaderboardCtrl', ['$scope', function($scope) {
 
-	var ref = firebase.database().ref();
 
-	$scope.players = $firebaseArray(ref);
 
+	var test = firebase.database().ref('players/').on('value', function(snapshot){
+		//TURN OBJECT TO ARRAY THEN APPLY TO SCOPE.
+
+		$scope.players = snapshot.val();
+	});
 
 
 }]);

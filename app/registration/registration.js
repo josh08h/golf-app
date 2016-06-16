@@ -10,22 +10,43 @@ angular.module('myApp.registration', ['ngRoute'])
 	}])
 
 	.controller('RegistrationCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray){
-		var ref = firebase.database().ref();
-		$scope.players = $firebaseArray(ref);
+		// /users/$uid
+		// /courses/$courseName
+		// var testData = {
+		// 	"players" : {
+		// 		"Josh": {
+		// 			'handicap': 18
+		// 		},
+		// 		"Tom": {
+		// 			'handicap': 26
+		// 		},
+		// 		"Ed": {
+		// 			'handicap': 22
+		// 		}
+		// 	},
+		// 	"course" : {
+		// 		'burstead': {
+		// 			'hole 1': {
+		// 				'par': 4,
+		// 				'si':14
+		// 			},
+		// 			'hole 2': {
+		// 				'par': 5,
+		// 				'si':12
+		// 			},
+		// 			'hole 3': {
+		// 				'par': 4,
+		// 				'si':5
+		// 			}
+		// 		}
+		// 	}
+		// }
 
 		$scope.addPlayer = function(){
-			console.log("adding player");
-			$scope.players.$add(
-			{
-				player:	
-							{
-								name: $scope.player.name,
-								handicap: $scope.player.handicap
-							}
-			}
-			).then(function(ref){
-				$scope.player.name = '';
-				$scope.player.handicap = '';
-			})
+			console.log('players/' + $scope.player.name);
+			firebase.database().ref('players/' + $scope.player.name).set({
+				'handicap':$scope.player.handicap,
+				'groupID':localStorage.getItem('uid')
+			});
 		}
 	}])
