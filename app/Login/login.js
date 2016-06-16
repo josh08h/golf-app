@@ -9,38 +9,35 @@ angular.module('myApp.login', ['ngRoute'])
   });
 }])
 
-.controller('LoginCtrl', ['$scope', 'localStorageService', function($scope, localStorageService){
-	var key = 'loggedIn'
-	var val = false;
-	// if (firebase.auth().currentUser){
-	// 	$scope.showLoginFields = false;
-	// } else {
-	// 	$scope.showLoginFields = true;
-	// }
-	$scope.loggedIn = localStorageService.get('loggedIn');
+.controller('LoginCtrl', ['$scope', function($scope){
 
+
+	//set observer on Auth object.
+	//use $digest to refresh watchers in angular.
+	firebase.auth().onAuthStateChanged(function(user) {
+	  if (user) {
+	    $scope.loggedIn = true;
+	    $scope.$digest();
+	  } else {
+	    $scope.loggedIn = false;
+	    $scope.$digest();
+	  }
+	});
+
+	//Login function
 	$scope.login = function(){
 		var email = $scope.user.email,
 				password = $scope.user.password;	
-		firebase.auth().signInWithEmailAndPassword(email, password).then(function(ref){
-			//Successful login.
-			val = true;
-			localStorageService.set(key, val);
-			$scope.loggedIn = true;
-			//ADDED THIS TO REFRESH WATCHERS
-			$scope.$digest();
-		}).catch(function(err){
-			console.log(err.code);
-		});
+		firebase.auth().signInWithEmailAndPassword(email, password)
+			.catch(function(err){
+				console.log(err.code);
+			});
 	};
 
+	//Logout function
 	$scope.logout = function(){
-		firebase.auth().signOut().then(function(){
-			val = false;
-			localStorageService.set(key, val);
-			$scope.loggedIn = false;
-			//ADDED THIS TO REFRESH WATCHERS
-			$scope.$digest();
-		});
+		firebase.auth().signOut()
 	};
+
+
 }]);
