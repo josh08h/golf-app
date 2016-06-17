@@ -9,7 +9,7 @@ angular.module('myApp.login', ['ngRoute'])
   });
 }])
 
-.controller('LoginCtrl', ['$scope', function($scope){
+.controller('LoginCtrl', ['$scope', '$location', function($scope, $location){
 
 	//set observer on Auth object.
 	//use $digest to refresh watchers in angular.
@@ -40,6 +40,8 @@ angular.module('myApp.login', ['ngRoute'])
 	//Logout function
 	$scope.logout = function(){
 		firebase.auth().signOut()
+		$location.path("/");
 	};
 
 }]);
+
