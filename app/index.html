@@ -43,8 +43,8 @@
             </div>
           <div ng-show='loggedIn' class="captain-nav">
             <ul class="nav navbar-nav">
-              <li><a href="#!/input">My Group</a></li>
-              <li><a href="#!/registration">Add Players</a></li>
+              <li class="active"><a href="#!/input">My Group</a></li>
+              <li class="active"><a href="#!/registration">Add Players</a></li>
               <li><a ng-click="logout()" href="">Sign Out</a></li>
             </ul>
           </div>
@@ -76,7 +76,7 @@
 
 
   <script src="bower_components/angular/angular.js"></script> 
-  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/firebase/firebase.js"></script>
@@ -86,14 +86,12 @@
   <script src="Leaderboard/leaderboard.js"></script>
   <script src="Login/login.js"></script>
   <script src="Input_Scores/input.js"></script>
-
   <script src="registration/registration.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
   <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-
-    <script>
+<script>
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyAD5OqcuGExhWi_oASzr42rq5IVvR7jdCY",
@@ -103,5 +101,7 @@
   };
   firebase.initializeApp(config);
 </script>
+
+    
 </body>
 </html>

@@ -11,10 +11,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat='hole in courseHoles | orderBy: "-holeNumber"'>
-						<td>{{hole.number}}</td>
-						<td>{{hole.par}}</td>
+					<tr ng-repeat='(key, hole) in courseHoles'>
+						<td>{{hole.Hole}}</td>
+						<td>{{hole.Par}}</td>
 						<td>{{hole.strokeIndex}}</td>
+						<td ng-repeat="player in myPlayers">{{player.Scores}}</td>
 						<!-- Input boxes here and scores displayed for prior holes -->
 					</tr>
 				</tbody>
