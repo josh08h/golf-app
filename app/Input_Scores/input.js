@@ -10,7 +10,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		});
 	}])
 
-	.service('scoresService', ['$q', function($q){
+	.service('scoreService', ['$q', function($q){
 		var service = {}
 
 		service.holes = firebase.database().ref('Holes/');
@@ -46,10 +46,32 @@ angular.module('myApp.inputScores', ['ngRoute'])
 			return deferred.promise;
 		}
 
+		service.submitScores = function(scores){
+			var deferred = $q.defer();
+			var scoresLength = Object.keys(scores).length
+			for(var i = 0; i < scoresLength; i++){
+				var score = scores[i]
+				var playerRef = service.players.child(score.PlayerId)
+				var tournamentRef = service.tournaments.child(score.TournamentId)
+				var holeRef = service.holes.child(score.HoleId)
+
+				var newScore = service.scores.push(score)
+				var newScoreId = newScore.key
+
+				// Update associations
+				playerRef.child('Scores').child(newScoreId).set(true)
+				holeRef.child('Scores').child(newScoreId).set(true)
+				tournamentRef.child('Scores').child(newScoreId).set(true)
+
+				deferred.resolve('updated')
+			}
+			return deferred.promise;
+		}
+
 		return service
 	}])
 
-	.controller('inputScoresCtrl', ['$scope', 'scoresService', function($scope, scoresService){
+	.controller('inputScoresCtrl', ['$scope', 'scoreService', function($scope, scoreService){
 		var holes = firebase.database().ref('Holes/');
 		var players = firebase.database().ref('Players/');
 		var tournaments = firebase.database().ref('Tournaments/');
@@ -59,26 +81,11 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		$scope.score = {}
 
 		$scope.submitScores = function(){
-			console.log($scope.score)
-			var scoresLength = Object.keys($scope.score).length
-			for(var i = 0; i < scoresLength; i++){
-				var score = $scope.score[i]
-				var playerRef = players.child(score.PlayerId)
-				var tournamentRef = tournaments.child(score.TournamentId)
-				var holeRef = holes.child(score.HoleId)
-
-				var newScore = scores.push($scope.score[i])
-				var newScoreId = newScore.key
-				// Update associations
-
-				playerRef.child('Scores').child(newScoreId).set(true)
-				holeRef.child('Scores').child(newScoreId).set(true)
-				tournamentRef.child('Scores').child(newScoreId).set(true)
-			}
-			scoresService.refreshLeaderboard().then(function(data){
-				$scope.myPlayers = data;
+			scoreService.submitScores($scope.score).then(function(d){
+				refreshLeaderboard()
 			})
-			$scope.hideForm()
+			
+			
 		}
 
 		$scope.hideForm = function(){
@@ -124,11 +131,15 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		// 		})
 		// }
 
-		scoresService.refreshLeaderboard().then(function(data){
-			$scope.myPlayers = data;
-		})
+		function refreshLeaderboard(){
+			scoreService.refreshLeaderboard().then(function(data){
+				$scope.myPlayers = data;
+				$scope.hideForm()
+			})
+		}
 
-			// refreshLeaderboard()
+
+			refreshLeaderboard()
 	}])
 
 
