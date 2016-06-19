@@ -8,15 +8,15 @@
 					<form>
 					  <div class="form-group">
 					    <label>{{player.Name}}</label>
-					    <input ng-model='score[$index].score' type="text" class="form-control" placeholder="Score">
-					    <input type="hidden" ng-init='score[$index].HoleId=(holeId)'>
+					    <input ng-model='score[$index].Score' type="text" class="form-control" placeholder="Score">
+					    <input type="hidden" ng-init='score[$index].HoleId=(hole.HoleId)'>
 					    <input type="hidden" ng-init='score[$index].PlayerId=(player.PlayerId)'>
 					    <input type="hidden" ng-init='score[$index].TournamentId="T1"'>
 					  </div>
 					</form>
 				</div>
 				<button type="submit" ng-click="submitScores()" class="btn btn-default">Submit</button>
-				<button ng-click="showForm()" class='btn btn-danger'>Cancel</button>
+				<button ng-click="hideForm()" class='btn btn-danger'>Cancel</button>
 			</div>
 
 			<table class="table table-bordered table-hover table-striped" ng-if="!addScore">
@@ -34,10 +34,10 @@
 						<td>{{hole.Par}}</td>
 						<td>{{hole.strokeIndex}}</td>
 						{{key}}
-						<td ng-repeat="score in myPlayers[0].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
-						<td ng-repeat="score in myPlayers[1].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
-						<td ng-repeat="score in myPlayers[2].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
-						<td ng-repeat="score in myPlayers[3].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
+						<td ng-repeat="score in myPlayers[0].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
+						<td ng-repeat="score in myPlayers[1].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
+						<td ng-repeat="score in myPlayers[2].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
+						<td ng-repeat="score in myPlayers[3].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
 						<!-- Input boxes here and scores displayed for prior holes -->
 					</tr>
 				</tbody>

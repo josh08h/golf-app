@@ -10,11 +10,49 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		});
 	}])
 
-	.controller('inputScoresCtrl', ['$scope', function($scope){
+	.service('scoresService', ['$q', function($q){
+		var service = {}
+
+		service.holes = firebase.database().ref('Holes/');
+		service.players = firebase.database().ref('Players/');
+		service.tournaments = firebase.database().ref('Tournaments/');
+		service.scores = firebase.database().ref('Scores/');
+
+		service.refreshLeaderboard = function(){
+			var deferred = $q.defer();
+			
+			service.players
+				.orderByChild('Groups/GroupA')
+				.equalTo(true)
+				.once('value', function(snapshot){
+					var myPlayers = []
+					snapshot.forEach(function(cs){
+						getScores(cs, myPlayers)
+					})
+			});
+
+			function getScores(cs, myPlayers){
+				service.scores
+					.orderByChild('PlayerId')
+					.equalTo(cs.key)
+					.on('value', function(snap){
+						var player = cs.val()
+						player.Scores = snap.val()
+						player.PlayerId = cs.key
+						myPlayers.push(player)
+						deferred.resolve(myPlayers)
+					})
+			}
+			return deferred.promise;
+		}
+
+		return service
+	}])
+
+	.controller('inputScoresCtrl', ['$scope', 'scoresService', function($scope, scoresService){
 		var holes = firebase.database().ref('Holes/');
 		var players = firebase.database().ref('Players/');
 		var tournaments = firebase.database().ref('Tournaments/');
-		// var groups = firebase.database().ref('Groups/');
 		var scores = firebase.database().ref('Scores/');
 		$scope.myPlayers = []
 		$scope.addScore = false
@@ -28,32 +66,27 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				var playerRef = players.child(score.PlayerId)
 				var tournamentRef = tournaments.child(score.TournamentId)
 				var holeRef = holes.child(score.HoleId)
-				
+
 				var newScore = scores.push($scope.score[i])
 				var newScoreId = newScore.key
-				debugger
 				// Update associations
-				// playerRef.child('Scores').push({
-				// 	newScoreId: true
-				// })
-				// holeRef.child('Scores').push({
-				// 	newScoreId: true
-				// })
-				tournamentRef.update({
-					"Scores":{
-						newScoreId: true
-					}
-				})
+
+				playerRef.child('Scores').child(newScoreId).set(true)
+				holeRef.child('Scores').child(newScoreId).set(true)
+				tournamentRef.child('Scores').child(newScoreId).set(true)
 			}
+			scoresService.refreshLeaderboard().then(function(data){
+				$scope.myPlayers = data;
+			})
+			$scope.hideForm()
 		}
 
-		$scope.showForm = function(){
+		$scope.hideForm = function(){
 			$scope.addScore = false
 		}
 
 		$scope.addScores = function(key, hole){
 			$scope.addScore = true
-			$scope.holeId = key
 			$scope.hole = hole
 		}
 
@@ -65,31 +98,37 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		});
 
 
-		function refreshLeaderboard(){
-			players
-				.orderByChild('Groups/GroupA')
-				.equalTo(true)
-				.once('value', function(snapshot){
-					snapshot.forEach(function(cs){
-						getScores(cs)
-					})
-			});
-		}
+		//MOVED TO SERVICE 
 
-		function getScores(cs){
-			scores
-				.orderByChild('PlayerId')
-				.equalTo(cs.key)
-				.on('value', function(snap){
-					var player = cs.val()
-					player.Scores = snap.val()
-					player.PlayerId = cs.key
-					$scope.myPlayers.push(player)
-					$scope.$digest();
-				})
-		}
+		// function refreshLeaderboard(){
+		// 	players
+		// 		.orderByChild('Groups/GroupA')
+		// 		.equalTo(true)
+		// 		.once('value', function(snapshot){
+		// 			snapshot.forEach(function(cs){
+		// 				getScores(cs)
+		// 			})
+		// 	});
+		// }
 
-			refreshLeaderboard()
+		// function getScores(cs){
+		// 	scores
+		// 		.orderByChild('PlayerId')
+		// 		.equalTo(cs.key)
+		// 		.on('value', function(snap){
+		// 			var player = cs.val()
+		// 			player.Scores = snap.val()
+		// 			player.PlayerId = cs.key
+		// 			$scope.myPlayers.push(player)
+		// 			$scope.$digest();
+		// 		})
+		// }
+
+		scoresService.refreshLeaderboard().then(function(data){
+			$scope.myPlayers = data;
+		})
+
+			// refreshLeaderboard()
 	}])
 
 
