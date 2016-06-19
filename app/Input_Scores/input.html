@@ -1,21 +1,43 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<table class="table table-bordered table-striped">
+
+			<div ng-if="addScore">
+				<h1>Hole - {{hole.Hole}}</h1>
+				<div ng-repeat="(key, player) in myPlayers">
+					<form>
+					  <div class="form-group">
+					    <label>{{player.Name}}</label>
+					    <input ng-model='score[$index].score' type="text" class="form-control" placeholder="Score">
+					    <input type="hidden" ng-init='score[$index].HoleId=(holeId)'>
+					    <input type="hidden" ng-init='score[$index].PlayerId=(player.PlayerId)'>
+					    <input type="hidden" ng-init='score[$index].TournamentId="T1"'>
+					  </div>
+					</form>
+				</div>
+				<button type="submit" ng-click="submitScores()" class="btn btn-default">Submit</button>
+				<button ng-click="showForm()" class='btn btn-danger'>Cancel</button>
+			</div>
+
+			<table class="table table-bordered table-hover table-striped" ng-if="!addScore">
 				<thead>
 					<tr>
 						<th>Hole</th>
 						<th>Par</th>
 						<th>S.I</th>
-						<th ng-repeat='(name, val) in myPlayers'>{{name}}</th>
+						<th ng-repeat='(key, player) in myPlayers'>{{player.Name}}</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat='(key, hole) in courseHoles'>
+					<tr ng-repeat="(key, hole) in courseHoles | orderByObject:'Hole'" ng-click="addScores(key, hole)">
 						<td>{{hole.Hole}}</td>
 						<td>{{hole.Par}}</td>
 						<td>{{hole.strokeIndex}}</td>
-						<td ng-repeat="player in myPlayers">{{player.Scores}}</td>
+						{{key}}
+						<td ng-repeat="score in myPlayers[0].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
+						<td ng-repeat="score in myPlayers[1].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
+						<td ng-repeat="score in myPlayers[2].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
+						<td ng-repeat="score in myPlayers[3].Scores" ng-if="score.HoleId === ('h'+ hole.Hole)">{{score.Score}}</td>
 						<!-- Input boxes here and scores displayed for prior holes -->
 					</tr>
 				</tbody>
