@@ -7,7 +7,7 @@
 				<div ng-repeat="(key, player) in myPlayers">
 					<form>
 					  <div class="form-group">
-					    <label>{{player.Name}}</label>
+					    <label>{{player.name}}</label>
 					    <input ng-model='score[$index].Score' type="text" class="form-control" placeholder="Score">
 					    <input type="hidden" ng-init='score[$index].HoleId=(hole.HoleId)'>
 					    <input type="hidden" ng-init='score[$index].PlayerId=(player.PlayerId)'>
@@ -25,7 +25,7 @@
 						<th>Hole</th>
 						<th>Par</th>
 						<th>S.I</th>
-						<th ng-repeat='(key, player) in myPlayers'>{{player.Name}}</th>
+						<th ng-repeat='(key, player) in myPlayers'>{{player.name}}</th>
 					</tr>
 				</thead>
 				<tbody>

@@ -14,7 +14,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		var service = {}
 
 		service.holes = firebase.database().ref('Holes/');
-		service.players = firebase.database().ref('Players/');
+		service.players = firebase.database().ref('players/');
 		service.tournaments = firebase.database().ref('Tournaments/');
 		service.scores = firebase.database().ref('Scores/');
 
@@ -22,11 +22,12 @@ angular.module('myApp.inputScores', ['ngRoute'])
 			var deferred = $q.defer();
 			
 			service.players
-				.orderByChild('Groups/GroupA')
-				.equalTo(true)
+				.orderByChild('groupID')
+				.equalTo(localStorage.getItem('uid'))
 				.once('value', function(snapshot){
 					var myPlayers = []
-					snapshot.forEach(function(cs){
+
+					snapshot.forEach(function(cs){	
 						getScores(cs, myPlayers)
 					})
 			});
@@ -39,7 +40,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 						var player = cs.val()
 						player.Scores = snap.val()
 						player.PlayerId = cs.key
-						myPlayers.push(player)
+						myPlayers.push(player);
 						deferred.resolve(myPlayers)
 					})
 			}
@@ -47,6 +48,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		}
 
 		service.submitScores = function(scores){
+			//IF YOU CONSOLE.LOG(SCORES) THERE ARE double the amount of objects than there are players?...
 			var deferred = $q.defer();
 			var scoresLength = Object.keys(scores).length
 			for(var i = 0; i < scoresLength; i++){
@@ -73,7 +75,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 	.controller('inputScoresCtrl', ['$scope', 'scoreService', function($scope, scoreService){
 		var holes = firebase.database().ref('Holes/');
-		var players = firebase.database().ref('Players/');
+		var players = firebase.database().ref('players/');
 		var tournaments = firebase.database().ref('Tournaments/');
 		var scores = firebase.database().ref('Scores/');
 		$scope.myPlayers = []
@@ -84,8 +86,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 			scoreService.submitScores($scope.score).then(function(d){
 				refreshLeaderboard()
 			})
-			
-			
 		}
 
 		$scope.hideForm = function(){
@@ -104,42 +104,13 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				$scope.courseHoles = snapshot.val()
 		});
 
-
-		//MOVED TO SERVICE 
-
-		// function refreshLeaderboard(){
-		// 	players
-		// 		.orderByChild('Groups/GroupA')
-		// 		.equalTo(true)
-		// 		.once('value', function(snapshot){
-		// 			snapshot.forEach(function(cs){
-		// 				getScores(cs)
-		// 			})
-		// 	});
-		// }
-
-		// function getScores(cs){
-		// 	scores
-		// 		.orderByChild('PlayerId')
-		// 		.equalTo(cs.key)
-		// 		.on('value', function(snap){
-		// 			var player = cs.val()
-		// 			player.Scores = snap.val()
-		// 			player.PlayerId = cs.key
-		// 			$scope.myPlayers.push(player)
-		// 			$scope.$digest();
-		// 		})
-		// }
-
 		function refreshLeaderboard(){
 			scoreService.refreshLeaderboard().then(function(data){
 				$scope.myPlayers = data;
 				$scope.hideForm()
 			})
 		}
-
-
-			refreshLeaderboard()
+			refreshLeaderboard();
 	}])
 
 

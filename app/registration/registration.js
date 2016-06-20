@@ -44,10 +44,14 @@ angular.module('myApp.registration', ['ngRoute'])
 		// }
 
 		$scope.addPlayer = function(){
-			console.log('players/' + $scope.player.name);
-			firebase.database().ref('players/' + $scope.player.name).set({
+			firebase.database().ref('players/').push({
+				'name': $scope.player.name,
 				'handicap':$scope.player.handicap,
 				'groupID':localStorage.getItem('uid')
+			}).then(function(player){
+				$scope.player.name = '';
+				$scope.player.handicap = '';
+				$scope.$apply();
 			});
 		}
 	}])
