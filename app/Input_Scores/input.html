@@ -5,6 +5,8 @@
 			<div ng-if="addScore">
 				<h1>Hole - {{hole.Hole}}</h1>
 				<div ng-repeat="(key, player) in myPlayers">
+				<div>key: {{key}}</div>
+				<div>player: {{player}}</div>
 					<form>
 					  <div class="form-group">
 					    <label>{{player.name}}</label>

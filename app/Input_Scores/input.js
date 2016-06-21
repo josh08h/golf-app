@@ -41,6 +41,8 @@ angular.module('myApp.inputScores', ['ngRoute'])
 						player.Scores = snap.val()
 						player.PlayerId = cs.key
 						myPlayers.push(player);
+						//CHECK CONSOLE.LOG HERE
+						// console.log('myPlayers: ', myPlayers);
 						deferred.resolve(myPlayers)
 					})
 			}
@@ -49,7 +51,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 		service.submitScores = function(scores){
 			//IF YOU CONSOLE.LOG(SCORES) THERE ARE double the amount of objects than there are players?...
-			console.log(scores);
 			var deferred = $q.defer();
 			var scoresLength = Object.keys(scores).length
 			for(var i = 0; i < scoresLength; i++){
@@ -85,8 +86,9 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 		$scope.submitScores = function(){
 			scoreService.submitScores($scope.score).then(function(d){
-				refreshLeaderboard()
+				refreshLeaderboard();
 			})
+			$scope.score={};
 		}
 
 		$scope.hideForm = function(){
