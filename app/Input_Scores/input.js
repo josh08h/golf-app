@@ -27,12 +27,22 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				.once('value', function(snapshot){
 					var myPlayers = []
 
-					snapshot.forEach(function(cs){	
+					// snapshot.forEach(function(data){
+					// 	myPlayers.push(data);
+					// 	console.log('data: ', data.val())
+					// });
+
+					
+					// console.log('player snapshot: ', snapshot.val());
+					
+					//for each player in my group, get the scores.
+					snapshot.forEach(function(cs){
 						getScores(cs, myPlayers)
-					})
+					});
 			});
 
 			function getScores(cs, myPlayers){
+				var myPlayers = [];
 				service.scores
 					.orderByChild('PlayerId')
 					.equalTo(cs.key)
@@ -41,6 +51,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 						player.Scores = snap.val()
 						player.PlayerId = cs.key
 						myPlayers.push(player);
+						console.log('myPlayers', myPlayers);
 						//CHECK CONSOLE.LOG HERE
 						// console.log('myPlayers: ', myPlayers);
 						deferred.resolve(myPlayers)
@@ -85,6 +96,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		$scope.score = {}
 
 		$scope.submitScores = function(){
+			console.log('scope.score: ', $scope.score);
 			scoreService.submitScores($scope.score).then(function(d){
 				refreshLeaderboard();
 			})
