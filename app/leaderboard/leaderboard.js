@@ -10,8 +10,4 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 }])
 
 .controller('LeaderboardCtrl', ['$scope', function($scope) {
-	var ref = firebase.database().ref().on('value', function(snap){
-		console.log(snap.val())
-	});
-
 }]);

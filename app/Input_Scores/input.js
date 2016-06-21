@@ -49,6 +49,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 		service.submitScores = function(scores){
 			//IF YOU CONSOLE.LOG(SCORES) THERE ARE double the amount of objects than there are players?...
+			console.log(scores);
 			var deferred = $q.defer();
 			var scoresLength = Object.keys(scores).length
 			for(var i = 0; i < scoresLength; i++){
