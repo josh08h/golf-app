@@ -20,7 +20,7 @@
 				<button type="submit" ng-click="submitScores()" class="btn btn-default">Submit</button>
 				<button ng-click="hideForm()" class='btn btn-danger'>Cancel</button>
 			</div>
-
+			
 			<table class="table table-bordered table-hover table-striped" ng-if="!addScore">
 				<thead>
 					<tr>
@@ -31,7 +31,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="(key, hole) in courseHoles | orderByObject:'Hole'" ng-click="addScores(key, hole)">
+					<tr ng-repeat="(key, hole) in myHoles | orderByObject:'Hole'" ng-click="showForm()">
 						<td>{{hole.Hole}}</td>
 						<td>{{hole.Par}}</td>
 						<td>{{hole.strokeIndex}}</td>
