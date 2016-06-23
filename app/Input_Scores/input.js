@@ -23,6 +23,36 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				};
 			};
 
+			service.playersFnc = function(players){
+
+				var myPlayers = [];
+				var deferred = $q.defer();
+
+				players
+					.orderByChild('groupID')
+					.equalTo(localStorage.getItem('uid'))
+					.on('value', function(snapshot){
+						var players = snapshot.val();
+						deferred.resolve([snapshot.val()]);
+					});
+				return deferred.promise;
+			};
+
+			service.getScores = function(myPlayers) {
+				var scores = firebase.database().ref('Scores/');
+				var deferred = $q.defer();
+				Object.keys(myPlayers).forEach(function(playerId){
+					scores.orderByChild('PlayerId').equalTo(playerId).on('value', function(snapshot){
+						var scores = snapshot.val();
+						console.log('scores: ', scores);
+						myPlayers[playerId].scores = scores;
+						console.log(myPlayers)
+					})
+				})
+				deferred.resolve(myPlayers)
+				return deferred.promise;
+			}
+
 		return service;
 		}]) // end of service
 
@@ -73,41 +103,11 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
     // Get players in my group then for each player
     // get the scores associated to them
-		playersFnc().then(function(players){
-			var myPlayersObj = players[0];
-
-
-
-		// Second Way-------------------
-		//The problem is that the .on is only getting applied to the last in the loop.
-		//however when controller refreshed (click navbar addplayer then back to mygroup)
-		//the .on gets applied to all the players.
-			for (var i = 0; i<Object.keys(myPlayersObj).length; i++){
-				var key = Object.keys(myPlayersObj)[i];
-					debugger;
-				scores.orderByChild('PlayerId').equalTo(key).on('value', function(snapshot){
-					debugger;
-					var scores = snapshot.val();
-					console.log('scores: ', scores);
-					myPlayersObj[key].scores = scores;
-					console.log(myPlayersObj)
-				})
-			}
-
-
-			// First Way-------------------
-
-			for (var key in myPlayersObj){
-				console.log(key)
-				scores.orderByChild('PlayerId').equalTo(key).on('value', function(snapshot){
-					// myPlayersObj[key].scores = snapshot.val();
-					var scores = snapshot.val();
-					console.log('scores: ', scores);
-					myPlayersObj[key].scores = scores;
-					console.log('playersObj:',myPlayersObj);
-				});
-			};
-			$scope.myPlayers = myPlayersObj;
+		scoreService.playersFnc(players).then(function(players){
+			var myPlayers = players[0];
+			scoreService.getScores(myPlayers).then(function (data) {
+				$scope.myPlayers = data;
+			});
 		});
 
 // get holes
