@@ -73,20 +73,28 @@ angular.module('myApp.inputScores', ['ngRoute'])
 // Get players in my group then for each player
 // get the scores associated to them
 		playersFnc().then(function(players){
-			$scope.myPlayers = players[0];
-			players.forEach(function(playersId){
-				for (var playerId in playersId){
-					scores.orderByChild('PlayerId').equalTo(playerId).on('value', function(snapshot){
-						console.log('scores:', snapshot.val());
-					})
-				}
-			})
+			
+			var deferred = $q.defer();
+			var myPlayersObj = players[0];
+
+			for (var key in myPlayersObj){
+				scores.orderByChild('PlayerId').equalTo(key).on('value', function(snapshot){
+					// myPlayersObj[key].scores = snapshot.val();
+					myPlayersObj[key].scores = snapshot.val()
+				});
+			};
+			$scope.myPlayers = myPlayersObj;
 		});
 
+// get holes
 		holesFnc().then(function(holes){
 			$scope.myHoles = holes[0];
 		});
 
+// --------------------------------------------------------------- turn object to array function
+		var toArray = function(obj){
+			return Object.keys(obj).map(function(key) {return obj[key]});
+		}
 
 // --------------------------------------------------------------- html onClick functions
 
