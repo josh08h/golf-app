@@ -11,7 +11,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 	}])
 		
 
-	.service('scoreService', ['$q', function($q){
+	.service('scoreService', ['$q', '$rootScope', function($q, $rootScope){
 			
 		var service = {};
 
@@ -47,8 +47,11 @@ angular.module('myApp.inputScores', ['ngRoute'])
 						console.log('scores: ', scores);
 						myPlayers[playerId].scores = scores;
 						console.log(myPlayers)
+						deferred.resolve(myPlayers)
+						$rootScope.$broadcast('scores:updated', deferred.promise);
 					})
 				})
+				
 				deferred.resolve(myPlayers)
 				return deferred.promise;
 			}
@@ -106,8 +109,15 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		scoreService.playersFnc(players).then(function(players){
 			var myPlayers = players[0];
 			scoreService.getScores(myPlayers).then(function (data) {
-				$scope.myPlayers = data;
+				$scope.myPlayers = data
 			});
+		});
+
+		$scope.$on('scores:updated', function(event, data) {
+			debugger
+			data.then(function(da) {
+				$scope.myPlayers = da
+			})
 		});
 
 // get holes
