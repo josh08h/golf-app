@@ -28,7 +28,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 
 	.controller('inputScoresCtrl', ['$scope', '$q', 'scoreService', function($scope, $q, scoreService){
-		
 		var holes = firebase.database().ref('Holes/');
 		var players = firebase.database().ref('players/');
 		var tournaments = firebase.database().ref('Tournaments/');
@@ -39,6 +38,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 // ------------------------------------------------------------ initialisation functions
 		var playersFnc = function(){
+
 			var myPlayers = [];
 			var deferred = $q.defer();
 
@@ -46,8 +46,8 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				.orderByChild('groupID')
 				.equalTo(localStorage.getItem('uid'))
 				.on('value', function(snapshot){
-					myPlayers.push(snapshot.val());
-					deferred.resolve(myPlayers);
+					var players = snapshot.val();
+					deferred.resolve([snapshot.val()]);
 				});
 			return deferred.promise;
 		};
@@ -61,26 +61,50 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				.orderByChild('CourseId')
 				.equalTo('Burstead')
 				.once('value', function(snapshot){
-					myHoles.push(snapshot.val());
-					deferred.resolve(myHoles);
+					deferred.resolve([snapshot.val()]);
 				});
 			return deferred.promise;
 		};
 
+
+
 //	------------------------------------------------------------ instantiating
 
 
-// Get players in my group then for each player
-// get the scores associated to them
+    // Get players in my group then for each player
+    // get the scores associated to them
 		playersFnc().then(function(players){
-			
-			var deferred = $q.defer();
 			var myPlayersObj = players[0];
 
+
+
+		// Second Way-------------------
+		//The problem is that the .on is only getting applied to the last in the loop.
+		//however when controller refreshed (click navbar addplayer then back to mygroup)
+		//the .on gets applied to all the players.
+			for (var i = 0; i<Object.keys(myPlayersObj).length; i++){
+				var key = Object.keys(myPlayersObj)[i];
+					debugger;
+				scores.orderByChild('PlayerId').equalTo(key).on('value', function(snapshot){
+					debugger;
+					var scores = snapshot.val();
+					console.log('scores: ', scores);
+					myPlayersObj[key].scores = scores;
+					console.log(myPlayersObj)
+				})
+			}
+
+
+			// First Way-------------------
+
 			for (var key in myPlayersObj){
+				console.log(key)
 				scores.orderByChild('PlayerId').equalTo(key).on('value', function(snapshot){
 					// myPlayersObj[key].scores = snapshot.val();
-					myPlayersObj[key].scores = snapshot.val()
+					var scores = snapshot.val();
+					console.log('scores: ', scores);
+					myPlayersObj[key].scores = scores;
+					console.log('playersObj:',myPlayersObj);
 				});
 			};
 			$scope.myPlayers = myPlayersObj;
