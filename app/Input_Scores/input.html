@@ -33,12 +33,7 @@
 						<td>{{hole.Hole}}</td>
 						<td>{{hole.Par}}</td>
 						<td>{{hole.strokeIndex}}</td>
-						{{myPlayers}}
-						<td ng-repeat="score in myPlayers[0].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
-						<td ng-repeat="score in myPlayers[1].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
-						<td ng-repeat="score in myPlayers[2].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
-						<td ng-repeat="score in myPlayers[3].Scores" ng-if="score.HoleId === (hole.HoleId)">{{score.Score}}</td>
-						<!-- Input boxes here and scores displayed for prior holes -->
+						<td ng-repeat="(key, player) in myPlayers">{{player.scores | with: hole.HoleId}}</td>
 					</tr>
 				</tbody>
 			</table>

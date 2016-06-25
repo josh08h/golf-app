@@ -9,7 +9,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 			isLogin: true
 		});
 	}])
-		
 
 	.service('scoreService', ['$q', '$rootScope', function($q, $rootScope){
 			
@@ -114,9 +113,8 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		});
 
 		$scope.$on('scores:updated', function(event, data) {
-			debugger
-			data.then(function(da) {
-				$scope.myPlayers = da
+			data.then(function(players) {
+				$scope.myPlayers = players
 			})
 		});
 
@@ -133,7 +131,9 @@ angular.module('myApp.inputScores', ['ngRoute'])
 // --------------------------------------------------------------- html onClick functions
 
 		$scope.submitForm = function(){
+			debugger
 			scoreService.addScores($scope.scoreFormData);
+			$scope.scoreFormData = {}
 			$scope.hideForm();
 		};
 
@@ -147,3 +147,15 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		}
 
 	}]) // end of controller()
+
+.filter('with', function() {
+  return function(items, field) {
+        var result = '';
+        angular.forEach(items, function(value, key) {
+            if (value.HoleId === field) {
+                result = value.Score;
+            }
+        });
+        return result;
+    };
+});
