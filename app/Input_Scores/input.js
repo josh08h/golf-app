@@ -134,10 +134,9 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		};
 
 		$scope.updateScores = function(){
-			// debugger
 			console.log($scope.scoreFormData)
 			scoreService.updateScores($scope.scoreFormData);
-			$scope.scoreFormData = {}
+			$scope.scoreFormData = {};
 			$scope.hideForm();
 		};
 
@@ -147,6 +146,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		}
 
 		function checkForUpdate(hole, players) {
+			$scope.scoreFormData = {}
 			var scoresFound = false;
 			_.each(players, function(value,key){
 			  _.each(value.scores, function(v, k){
@@ -157,11 +157,9 @@ angular.module('myApp.inputScores', ['ngRoute'])
 			 })
 			})
 			return scoresFound
-			debugger
 		}
 
 		$scope.showForm = function(hole){
-			debugger
 			if(checkForUpdate(hole, $scope.myPlayers)) {
 				$scope.updateScore = true;
 				$scope.hole = hole;
