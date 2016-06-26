@@ -22,20 +22,19 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				};
 			};
 
-			service.playersFnc = function(players){
+		service.refreshLeaderboard = function(players){
 
-				var myPlayers = [];
-				var deferred = $q.defer();
+			var myPlayers = [];
+			var deferred = $q.defer();
 
-				players
-					.orderByChild('groupID')
-					.equalTo(localStorage.getItem('uid'))
-					.on('value', function(snapshot){
-						var players = snapshot.val();
-						deferred.resolve([snapshot.val()]);
-					});
-				return deferred.promise;
-			};
+			players
+				.orderByChild('groupID')
+				.equalTo(localStorage.getItem('uid'))
+				.on('value', function(snapshot){
+					var players = snapshot.val();
+					service.getScores(players)			
+				});
+		};
 
 			service.getScores = function(myPlayers) {
 				var scores = firebase.database().ref('Scores/');
@@ -43,16 +42,11 @@ angular.module('myApp.inputScores', ['ngRoute'])
 				Object.keys(myPlayers).forEach(function(playerId){
 					scores.orderByChild('PlayerId').equalTo(playerId).on('value', function(snapshot){
 						var scores = snapshot.val();
-						console.log('scores: ', scores);
 						myPlayers[playerId].scores = scores;
-						console.log(myPlayers)
 						deferred.resolve(myPlayers)
 						$rootScope.$broadcast('scores:updated', deferred.promise);
 					})
 				})
-				
-				deferred.resolve(myPlayers)
-				return deferred.promise;
 			}
 
 		return service;
@@ -69,20 +63,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		$scope.scoreFormData = {}
 
 // ------------------------------------------------------------ initialisation functions
-		var playersFnc = function(){
-
-			var myPlayers = [];
-			var deferred = $q.defer();
-
-			players
-				.orderByChild('groupID')
-				.equalTo(localStorage.getItem('uid'))
-				.on('value', function(snapshot){
-					var players = snapshot.val();
-					deferred.resolve([snapshot.val()]);
-				});
-			return deferred.promise;
-		};
 
 
 		var holesFnc = function(){
@@ -105,12 +85,8 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
     // Get players in my group then for each player
     // get the scores associated to them
-		scoreService.playersFnc(players).then(function(players){
-			var myPlayers = players[0];
-			scoreService.getScores(myPlayers).then(function (data) {
-				$scope.myPlayers = data
-			});
-		});
+
+		scoreService.refreshLeaderboard(players)
 
 		$scope.$on('scores:updated', function(event, data) {
 			data.then(function(players) {
@@ -131,7 +107,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 // --------------------------------------------------------------- html onClick functions
 
 		$scope.submitForm = function(){
-			debugger
 			scoreService.addScores($scope.scoreFormData);
 			$scope.scoreFormData = {}
 			$scope.hideForm();
