@@ -173,7 +173,8 @@ angular.module('myApp.inputScores', ['ngRoute'])
 	}]) // end of controller()
 
 .filter('with', function() {
-  return function(items, field) {
+
+  function filter(items, field) {
         var result = '';
         angular.forEach(items, function(value, key) {
             if (value.HoleId === field) {
@@ -181,5 +182,14 @@ angular.module('myApp.inputScores', ['ngRoute'])
             }
         });
         return result;
+    };
+
+    return function(items, field){
+    	if (items === undefined){
+    		return 'loading...';
+    	}
+    	else{
+    		return filter(items, field);
+    	};
     };
 });
