@@ -93,10 +93,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 
 	.controller('inputScoresCtrl', ['$scope', '$q', 'scoreService', '_', function($scope, $q, scoreService, _){
-		var holes = firebase.database().ref('Holes/');
-		var players = firebase.database().ref('Players/');
-		var tournaments = firebase.database().ref('Tournaments/');
-		var scores = firebase.database().ref('Scores/');
 		$scope.myPlayers = []
 		$scope.addScore = false
 		$scope.updateScore = false
@@ -116,7 +112,7 @@ angular.module('myApp.inputScores', ['ngRoute'])
 	});
 
 // get holes
-	scoreService.getHoles(holes).then(function(holes){
+	scoreService.getHoles().then(function(holes){
 		$scope.myHoles = holes[0];
 	});
 
