@@ -7,8 +7,8 @@
 				<div ng-repeat="(key, player) in myPlayers">
 					<form>
 					  <div class="form-group">
-					    <label>{{player.name}}</label>
-					    <input ng-model='scoreFormData[$index].Score' type="text" class="form-control" placeholder="Score">
+					    <label>{{player.Name}}</label>
+					    <input ng-model='scoreFormData[$index].Score' type="text" class="form-control" placeholder="Score" required>
 					    <input type="hidden" ng-init='scoreFormData[$index].HoleId=(hole.HoleId)'>
 					    <input type="hidden" ng-init='scoreFormData[$index].PlayerId=(key)'>
 					    <input type="hidden" ng-init='scoreFormData[$index].TournamentId="T1"'>
@@ -18,14 +18,29 @@
 				<button type="submit" ng-click="submitForm()" class="btn btn-default">Submit</button>
 				<button ng-click="hideForm()" class='btn btn-danger'>Cancel</button>
 			</div>
+
+			<div ng-if="updateScore">
+				<h1>Hole - {{hole.Hole}}</h1>
+				<!-- <div ng-repeat="(key, player) in myPlayers"> -->
+					<form>
+					  <div class="form-group" ng-repeat="(key, score) in scoreFormData">
+					    <label>{{myPlayers[score.PlayerId].Name}}</label>
+					    <input ng-model='scoreFormData[key].Score' type="text" class="form-control" placeholder="Score" required>
+					  </div>
+					</form>
+				<!-- </div> -->
+				<button type="submit" ng-click="updateScores()" class="btn btn-default">Submit</button>
+				<button ng-click="hideForm()" class='btn btn-danger'>Cancel</button>
+			</div>
 			
-			<table class="table table-bordered table-hover table-striped" ng-if="!addScore">
+			
+			<table class="table table-bordered table-hover table-striped" ng-if="!addScore || !updateScore">
 				<thead>
 					<tr>
 						<th>Hole</th>
 						<th>Par</th>
 						<th>S.I</th>
-						<th ng-repeat='(key, player) in myPlayers'>{{player.name}}</th>
+						<th ng-repeat='(key, player) in myPlayers'>{{player.Name}}</th>
 					</tr>
 				</thead>
 				<tbody>
