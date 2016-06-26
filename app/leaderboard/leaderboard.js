@@ -78,22 +78,22 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 						var diff = score.Score-sPar;
 						switch (diff){
 							case 2:
-								points = 1;
+								points = 0;
 								break;
 							case 1:
-								points = 2;
+								points = 1;
 								break;
 							case 0:
-								points =3;
+								points =2;
 								break;
 							case -1:
-								points = 4;
+								points = 3;
 								break;
 							case -2:
-								points = 5;
+								points = 4;
 								break;
 							case -3:
-								points = 6;
+								points = 5;
 								break;
 							default:
 								points = 0;
