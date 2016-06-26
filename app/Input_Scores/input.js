@@ -157,11 +157,9 @@ angular.module('myApp.inputScores', ['ngRoute'])
 			 })
 			})
 			return scoresFound
-			debugger
 		}
 
 		$scope.showForm = function(hole){
-			debugger
 			if(checkForUpdate(hole, $scope.myPlayers)) {
 				$scope.updateScore = true;
 				$scope.hole = hole;
