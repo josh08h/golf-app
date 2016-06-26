@@ -9,7 +9,7 @@ angular.module('myApp.leaderboard', ['ngRoute'])
   });
 }])
 
-.service('leaderboardService', ['$q', '$rootScope', function($q, $rootScope){
+.service('leaderboardService', ['$q', '$rootScope', '$timeout', function($q, $rootScope, $timeout){
 	var holes = firebase.database().ref('Holes/');
 	var players = firebase.database().ref('Players/');
 	var scores = firebase.database().ref('Scores/');
@@ -37,20 +37,35 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 			.equalTo(true)
 			.on('value', function(snap){
 				myPlayers = snap.val();
-				Object.keys(myPlayers).forEach(function(playerId){
-					scores
-						.orderByChild('PlayerId')
-						.equalTo(playerId)
-						.on('value', function(snap){
-							var scores = snap.val();
-							myPlayers[playerId].scores = scores;
-							deferred.resolve(myPlayers);
-							$rootScope.$broadcast('allScores:updated', deferred.promise);
-						})
-				})
+        service.getScores(myPlayers)
+				// Object.keys(myPlayers).forEach(function(playerId){
+				// 	scores
+				// 		.orderByChild('PlayerId')
+				// 		.equalTo(playerId)
+				// 		.on('value', function(snap){
+				// 			var scores = snap.val();
+				// 			myPlayers[playerId].scores = scores;
+				// 			deferred.resolve(myPlayers);
+				// 			$rootScope.$broadcast('allScores:updated', deferred.promise);
+				// 		})
+				// })
 			})
-			return deferred.promise;
-		}	
+			// return deferred.promise;
+		}
+
+    service.getScores = function(myPlayers) {
+      var deferred = $q.defer();
+      Object.keys(myPlayers).forEach(function(playerId){
+        scores.orderByChild('PlayerId').equalTo(playerId).on('value', function(snapshot){
+          var scores = snapshot.val();
+          myPlayers[playerId].scores = scores;
+          deferred.resolve(myPlayers)
+          $timeout(function() {
+            $rootScope.$broadcast('allScores:updated', deferred.promise);
+          }, 10);
+        })
+      })
+    }
 
 		service.getPoints = function(hole, score, handicap){
 			for (var holeKey in hole){
@@ -109,7 +124,7 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 	return service;
 }])
 
-.controller('LeaderboardCtrl', ['$scope', 'leaderboardService', function($scope, leaderboardService) {
+.controller('LeaderboardCtrl', ['$scope', 'leaderboardService', '_', function($scope, leaderboardService, _) {
 
 
 	var getScores= function(players){
@@ -133,16 +148,26 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 		$scope.holes = holes[0];
 	});
 
+  function findLastHole (players) {
+    _.each(players, function(player){
+      var count = 0;
+      player.lastHole = _.find(_.toArray(player.scores).reverse(), function(score) {
+        if(count === 0) {
+          count +=1; 
+          return score;
+        }
+      });
+    }); 
+  };
+
 	//get all players in T1
-	leaderboardService.getPlayersWithScores().then(function(players){
-		$scope.players = players;
-		getScores(players);
-		// leaderboardService.getScores(players[0]);
-	});
+	leaderboardService.getPlayersWithScores()
 
 		$scope.$on('allScores:updated', function(event, data) {
 			data.then(function(players) {
+        findLastHole(players)
 				$scope.players = players
+        getScores(players);
 			})
 		});
 	//write a function that takes in a player and holes

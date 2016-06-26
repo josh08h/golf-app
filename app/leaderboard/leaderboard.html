@@ -1,6 +1,6 @@
 <div class="row" ng-controller='LeaderboardCtrl'>
+  {{players}}
 	<div class="col-md-12">
-	{{players}}
 		<table class="table table-bordered table-striped">
  			<thead>
  				<tr>
@@ -13,11 +13,11 @@
  				</tr>
  			</thead>
  			<tbody>
- 				<tr ng-repeat='player in players'>
+ 				<tr ng-repeat='(key, player) in players'>
  					<td>{{$index+1}}</td>
- 					<td>{{myPlayer.name}}</td>
- 					<td>{{player.hole}}</td>
- 					<td>{{player.handicap}}</td>
+ 					<td>{{player.Name}}</td>
+ 					<td>{{holes[player.lastHole.HoleId].Hole}}</td>
+ 					<td>{{player.Handicap}}</td>
  					<td>{{player.scratch}}</td>
  					<td>{{player.points}}</td>
  				</tr>
