@@ -115,15 +115,24 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 	var getScores= function(players){
 		//for each player
 		for (var playerId in players){
+			var totalPoints=0;
 			if (players[playerId].hasOwnProperty('scores') && players[playerId].scores != null){
 				var scoresLength = Object.keys(players[playerId].Scores).length;
 			}
 			//for each score in player
 			for (var scoreId in players[playerId].scores){
+				
 				var score = players[playerId].scores[scoreId];
 				var handicap = players[playerId].Handicap;
 				var hole = $scope.holes;
 				players[playerId].scores[scoreId].points = leaderboardService.getPoints($scope.holes, score, handicap);
+				if (players[playerId].hasOwnProperty('scores') && players[playerId].scores != null){
+					totalPoints += players[playerId].scores[scoreId].points;
+					players[playerId].totalPoints = totalPoints;
+				}
+				else {
+					players[playerId].totalPoints = 0;
+				}
 			}
 		}
 	}
