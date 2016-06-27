@@ -23,7 +23,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 
 // -----------------------------------------------------------------
 		service.addScores = function(scoreFormData){
-				console.log('form data: ',scoreFormData);
 				for (var key in scoreFormData){
 					var score = scoreFormData[key]
 					var playerRef = service.players.child(score.PlayerId)
@@ -41,7 +40,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 			};
 
 			service.updateScores = function(scoreFormData){
-				console.log('form data: ',scoreFormData);
 				for (var key in scoreFormData){
 					var score = scoreFormData[key]		
 					service.scores.child(key).update(score)
@@ -130,7 +128,6 @@ angular.module('myApp.inputScores', ['ngRoute'])
 		};
 
 		$scope.updateScores = function(){
-			console.log($scope.scoreFormData)
 			scoreService.updateScores($scope.scoreFormData);
 			$scope.scoreFormData = {};
 			$scope.hideForm();

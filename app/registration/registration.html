@@ -1,17 +1,52 @@
-	<h3>Add Player</h3>
-	<form ng-submit='addPlayer()'>
-  <div class="form-group">
-    <label>Name</label>
-    <input ng-model='player.name' type="text" class="form-control" placeholder="Name" required>
+	<div ng-if='!editPlayerFlag'>
+    <h3>Add Player</h3>
+  	<form ng-submit='addPlayer()'>
+    <div class="form-group">
+      <label>Name</label>
+      <input ng-model='player.name' type="text" class="form-control" placeholder="Name" required>
+    </div>
+    <div class="form-group">
+      <label>Handicap</label>
+      <input ng-model='player.handicap' type="text" class="form-control" placeholder="Handicap" required>
+    </div>
+    <button ng-click="clearFields()"type="submit" class="btn btn-default">Submit</button>
+  </form>
+
+
+  <div class="table-container">
+    <table class="table table-bordered table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Handicap</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat='(key, player) in myCurrentPlayers'>
+          <td>{{player.Name}}</td>
+          <td>{{player.Handicap}}</td>
+          <td><button ng-click='toggleEditForm(key)' class="btn btn-warning">Edit</button></td>
+          <td><button ng-click='deletePlayer(key)' class="btn btn-danger">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+    
   </div>
-  <div class="form-group">
-    <label>Handicap</label>
-    <input ng-model='player.handicap' type="text" class="form-control" placeholder="Handicap" required>
-  </div>
-  <button ng-click="clearFields()"type="submit" class="btn btn-default">Submit</button>
-</form>
-<div id="player-container">
-  <ul>
-    <li ng-repeat='(name,val) in myPlayers'>{{name}}</li>
-  </ul>
+</div>
+
+<div ng-if='editPlayerFlag'>
+  <form>
+    <div class="form-group">
+      <label>Name</label>
+      <input ng-model='editPlayer.name' type="text" class="form-control" placeholder="Name" required>
+    </div>
+    <div class="form-group">
+      <label>Handicap</label>
+      <input ng-model='editPlayer.handicap' type="text" class="form-control" placeholder="Handicap" required>
+    </div>
+    <button ng-click="submitEditForm()" class="btn btn-default">Confirm</button>
+    <button ng-click="toggleEditForm()" class="btn btn-default">Cancel</button>
+  </form>
 </div>
