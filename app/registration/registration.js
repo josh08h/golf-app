@@ -10,41 +10,30 @@ angular.module('myApp.registration', ['ngRoute'])
 		});
 	}])
 
-	.controller('RegistrationCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray){
-		// /users/$uid
-		// /courses/$courseName
-		// var testData = {
-		// 	"players" : {
-		// 		"Josh": {
-		// 			'handicap': 18
-		// 		},
-		// 		"Tom": {
-		// 			'handicap': 26
-		// 		},
-		// 		"Ed": {
-		// 			'handicap': 22
-		// 		}
-		// 	},
-		// 	"course" : {
-		// 		'burstead': {
-		// 			'hole 1': {
-		// 				'par': 4,
-		// 				'si':14
-		// 			},
-		// 			'hole 2': {
-		// 				'par': 5,
-		// 				'si':12
-		// 			},
-		// 			'hole 3': {
-		// 				'par': 4,
-		// 				'si':5
-		// 			}
-		// 		}
-		// 	}
-		// }
+	.controller('RegistrationCtrl', ['$scope', '$firebaseArray', '$q', function($scope, $firebaseArray, $q){
+		var players = firebase.database().ref('Players/');
+		var myPlayers;
+		//function to count players in group
+		var	getPlayers = function(){
+		var deferred = $q.defer();
+		players
+			.orderByChild('Groups/' + localStorage.getItem('uid'))
+			.equalTo(true)
+			.on('value', function(snap){
+				myPlayers = snap.val();
+				deferred.resolve(myPlayers)
+			})
+			return deferred.promise;
+		}
+		getPlayers().then(function(players){
+			$scope.myCurrentPlayers = players;
+			myPlayers = Object.keys(players).length;
+		});
+		
 
 		$scope.addPlayer = function(){
-			firebase.database().ref('Players/').push({
+			if (myPlayers < 4){
+							firebase.database().ref('Players/').push({
 				'Name': $scope.player.name,
 				'Handicap':$scope.player.handicap,
 				'Groups':{[localStorage.getItem('uid')] : true},
@@ -58,5 +47,10 @@ angular.module('myApp.registration', ['ngRoute'])
 				$scope.player.handicap = '';
 				$scope.$apply();
 			});
+			}
+			else{
+				alert('Maximum players reached in your group.')
+			}
+
 		}
 	}])
