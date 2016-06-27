@@ -38,19 +38,7 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 			.on('value', function(snap){
 				myPlayers = snap.val();
         service.getScores(myPlayers)
-				// Object.keys(myPlayers).forEach(function(playerId){
-				// 	scores
-				// 		.orderByChild('PlayerId')
-				// 		.equalTo(playerId)
-				// 		.on('value', function(snap){
-				// 			var scores = snap.val();
-				// 			myPlayers[playerId].scores = scores;
-				// 			deferred.resolve(myPlayers);
-				// 			$rootScope.$broadcast('allScores:updated', deferred.promise);
-				// 		})
-				// })
 			})
-			// return deferred.promise;
 		}
 
     service.getScores = function(myPlayers) {
@@ -74,6 +62,15 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 						var strokeHandDiff = handicap - hole[holeKey].strokeIndex;
 						var sPar;
 						var points;
+						var overPar;
+						var retObj = {};
+
+						if (!(isNaN(score.Score - hole[holeKey].Par))){
+							retObj.overPar = score.Score - hole[holeKey].Par;
+						}
+						else {
+							retObj.overPar = 0;
+						}
 						if (0<=strokeHandDiff && strokeHandDiff<18){
 							sPar = hole[holeKey].Par + 1;
 						}
@@ -93,33 +90,46 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 						var diff = score.Score-sPar;
 						switch (diff){
 							case 2:
-								points = 1;
+								points = 0;
 								break;
 							case 1:
-								points = 2;
+								points = 1;
 								break;
 							case 0:
-								points =3;
+								points =2;
 								break;
 							case -1:
-								points = 4;
+								points = 3;
 								break;
 							case -2:
-								points = 5;
+								points = 4;
 								break;
 							case -3:
-								points = 6;
+								points = 5;
 								break;
 							default:
-								points = 0;
+								points = 6;
 						}
 
-						return points;
+						retObj.points = points;
+						return retObj;
 					}// end if
 				}
 			}// end for 
 		};
 
+
+		service.sortPlayers = function(players){
+			var sortedPlayers = service.toArray(players);
+			sortedPlayers.sort(function(a,b){
+				return b.totalPoints - a.totalPoints
+			})
+			return sortedPlayers;
+		}
+
+		service.toArray = function(obj){
+			return Object.keys(obj).map(function(key) {return obj[key]});
+		}
 
 	return service;
 }])
@@ -130,6 +140,8 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 	var getScores= function(players){
 		//for each player
 		for (var playerId in players){
+			players[playerId].totalPoints = 0;
+			players[playerId].overPar = 0;
 			if (players[playerId].hasOwnProperty('scores') && players[playerId].scores != null){
 				var scoresLength = Object.keys(players[playerId].Scores).length;
 			}
@@ -138,7 +150,9 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 				var score = players[playerId].scores[scoreId];
 				var handicap = players[playerId].Handicap;
 				var hole = $scope.holes;
-				players[playerId].scores[scoreId].points = leaderboardService.getPoints($scope.holes, score, handicap);
+				players[playerId].scores[scoreId].points = leaderboardService.getPoints($scope.holes, score, handicap).points;
+				players[playerId].totalPoints += leaderboardService.getPoints($scope.holes, score, handicap).points;
+				players[playerId].overPar += leaderboardService.getPoints($scope.holes, score, handicap).overPar;
 			}
 		}
 	}
@@ -146,6 +160,7 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 	//get holes using service
 	leaderboardService.getHoles().then(function(holes){
 		$scope.holes = holes[0];
+		leaderboardService.getPlayersWithScores()
 	});
 
   function findLastHole (players) {
@@ -159,20 +174,12 @@ angular.module('myApp.leaderboard', ['ngRoute'])
       });
     }); 
   };
-
-	//get all players in T1
-	leaderboardService.getPlayersWithScores()
-
 		$scope.$on('allScores:updated', function(event, data) {
 			data.then(function(players) {
         findLastHole(players)
 				$scope.players = players
         getScores(players);
+        $scope.players = leaderboardService.sortPlayers(players);
 			})
 		});
-	//write a function that takes in a player and holes
-	//get player handicap
-	//order player scores by hole
-	//order holes by hole
-
 }]);
