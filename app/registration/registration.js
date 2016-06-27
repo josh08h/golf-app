@@ -31,7 +31,8 @@ angular.module('myApp.registration', ['ngRoute'])
 	.controller('RegistrationCtrl', ['$scope', '$firebaseArray', '$q', 'registrationService', function($scope, $firebaseArray, $q, registrationService){
 		var players = firebase.database().ref('Players/');
 		var myPlayers;
-		var myCurrentPlayers = {}
+		$scope.myCurrentPlayers = {}
+		$scope.player = {}
 		//function to count players in group
 		
 		var	getPlayers = function(){
@@ -101,13 +102,9 @@ angular.module('myApp.registration', ['ngRoute'])
 		});
 
 		$scope.submitEditForm = function(){
-			var newPlayer = {
-				Name : $scope.editPlayer.name,
-				Handicap : $scope.editPlayer.handicap,
-				Scores : $scope.myCurrentPlayers[$scope.key].Scores,
-				Tournaments : $scope.myCurrentPlayers[$scope.key].Tournaments,
-				Groups : $scope.myCurrentPlayers[$scope.key].Groups
-			};
+			var newPlayer = $scope.myCurrentPlayers[$scope.key];
+			newPlayer.Name = $scope.editPlayer.name;
+			newPlayer.Handicap = $scope.editPlayer.handicap
 			registrationService.editPlayer(newPlayer, $scope.key);
 			$scope.editPlayerFlag = false;
 		}
