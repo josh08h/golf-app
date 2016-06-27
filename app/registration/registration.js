@@ -31,10 +31,11 @@ angular.module('myApp.registration', ['ngRoute'])
 	.controller('RegistrationCtrl', ['$scope', '$firebaseArray', '$q', 'registrationService', function($scope, $firebaseArray, $q, registrationService){
 		var players = firebase.database().ref('Players/');
 		var myPlayers;
+		var myCurrentPlayers = {}
 		//function to count players in group
+		
 		var	getPlayers = function(){
 		var deferred = $q.defer();
-
 		$scope.editPlayerFlag = false;
 
 		players
@@ -47,15 +48,21 @@ angular.module('myApp.registration', ['ngRoute'])
 			})
 			return deferred.promise;
 		}
+
+
+
+
 		getPlayers().then(function(players){
 			$scope.myCurrentPlayers = players;
-			myPlayers = Object.keys(players).length;
-			console.log(players)
+			if(players){
+				myPlayers = Object.keys(players).length;
+			}
 		});
 		
 
 		$scope.addPlayer = function(){
 			if (myPlayers < 4){
+				console.log('name:', $scope.player);
 					firebase.database().ref('Players/').push({
 					'Name': $scope.player.name,
 					'Handicap':$scope.player.handicap,
