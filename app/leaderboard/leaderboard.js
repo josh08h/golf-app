@@ -4,7 +4,7 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {
-    templateUrl: 'Leaderboard/leaderboard.html',
+    templateUrl: 'leaderboard/leaderboard.html',
     controller: 'LeaderboardCtrl'
   });
 }])
