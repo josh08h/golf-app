@@ -64,7 +64,7 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 						var points;
 						var overPar;
 						var retObj = {};
-
+						debugger;
 						if (!(isNaN(score.Score - hole[holeKey].Par))){
 							retObj.overPar = score.Score - hole[holeKey].Par;
 						}
@@ -79,7 +79,10 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 						}
 						else if (strokeHandDiff>=18 && strokeHandDiff<36){
 							var modHC = strokeHandDiff-18;
-							if (hole[holeKey].strokeIndex<=modHC){
+							// if (hole[holeKey].strokeIndex<=modHC){
+							// 	sPar = hole[holeKey].Par + 2;
+							// }
+							if(handicap-hole[holeKey].strokeIndex>0){
 								sPar = hole[holeKey].Par + 2;
 							}
 							else {
@@ -89,9 +92,6 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 
 						var diff = score.Score-sPar;
 						switch (diff){
-							case 2:
-								points = 0;
-								break;
 							case 1:
 								points = 1;
 								break;
@@ -107,8 +107,16 @@ angular.module('myApp.leaderboard', ['ngRoute'])
 							case -3:
 								points = 5;
 								break;
-							default:
+							case -4:
 								points = 6;
+								break;
+							case -5:
+								points = 7;
+							case -6:
+								points = 8;
+								break;
+							default:
+								points = 0;
 						}
 
 						retObj.points = points;

@@ -32,3 +32,53 @@
 #leaderboard-jumbo{
   margin-top: 10%;
 }
+
+.jumbotron{
+  background-color: #c0dfc2; 
+}
+
+.table-bordered{
+  border-color: #4b6154 
+}
+
+html{
+  background-color: #e7f5dc;
+}
+
+.navbar-default{
+  background-color: #64ac8f;
+  border-color: #777;
+}
+
+.table-bordered{
+  border-color: #777;
+}
+
+.navbar-default .navbar-brand{
+  color: #FFF;
+}
+
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
+  border-color: #777;
+}
+
+th{
+  color: #FFF;
+}
+table{
+  background-color: #64ac8f;
+}
+.navbar-default .navbar-nav>.active>a:hover{
+  background-color: #64ac8f;
+}
+.navbar-default .navbar-nav>li>a{
+  color: #FFF;
+}
+
+.icon-bar{
+color:#FFF;
+}
+
+#editForm{
+  margin-top: 15%;
+}
